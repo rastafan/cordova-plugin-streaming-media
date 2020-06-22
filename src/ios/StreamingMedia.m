@@ -228,6 +228,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     // present modally so we get a close button
     [self.viewController presentViewController:moviePlayer animated:YES completion:^(void){
         [moviePlayer.player play];
+        [moviePlayer addObserver:self forKeyPath:@"view.frame" options: (NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial) context:nil];
     }];
     
     // add audio image and background color
@@ -284,6 +285,23 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
      name:MPMoviePlayerWillExitFullscreenNotification
      object:nil];
      */
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)objsect change:(NSDictionary *) change context:(void *) context{
+      if ([keyPath isEqualToString:@"view.frame"]) {
+            CGRect newValue = [change[NSKeyValueChangeNewKey]CGRectValue];
+            CGFloat y=newValue.origin.y;
+            if( y!=0){
+                  NSLog(@"video closed");
+                  
+                  [self cleanup];
+                  CDVPluginResult* pluginResult;
+
+                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+
+                  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+            }
+      }
 }
 
 - (void) handleGestures {
