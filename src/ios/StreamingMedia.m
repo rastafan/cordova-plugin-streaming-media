@@ -287,21 +287,22 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
      */
 }
 
-- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)objsect change:(NSDictionary *) change context:(void *) context{
-      if ([keyPath isEqualToString:@"view.frame"]) {
-            CGRect newValue = [change[NSKeyValueChangeNewKey]CGRectValue];
-            CGFloat y=newValue.origin.y;
-            if( y!=0){
-                  NSLog(@"video closed");
-                  
-                  [self cleanup];
-                  CDVPluginResult* pluginResult;
+- ( void) observeValueForKeyPath:( NSString *)keyPath ofObject:( id)objsect change:( NSDictionary *) change context:( void *) context{
+    if ([keyPath isEqualToString: @"view.frame"]) {
+        CGRect newValue = [change[ NSKeyValueChangeNewKey] CGRectValue];
+        CGFloat y=newValue. origin. y;
+        CGFloat x=newValue. origin. x;
+        if( ([ mOrientation isEqual: @"portrait"] && y!= 0 ) || ([ mOrientation isEqual: @"landscape"] && x!= 0) ){
+            NSLog( @"video closed");
+            
+            [ self cleanup];
+            CDVPluginResult* pluginResult;
 
-                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:true];
+            pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsBool: true];
 
-                  [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
-            }
-      }
+            [ self. commandDelegate sendPluginResult:pluginResult callbackId: callbackId];
+        }
+    }
 }
 
 - (void) handleGestures {
