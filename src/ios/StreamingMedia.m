@@ -227,8 +227,8 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     
     // present modally so we get a close button
     [self.viewController presentViewController:moviePlayer animated:YES completion:^(void){
-        [moviePlayer.player play];
-        [moviePlayer addObserver:self forKeyPath:@"view.frame" options: (NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial) context:nil];
+        [self->moviePlayer.player play];
+        [self->moviePlayer addObserver:self forKeyPath:@"view.frame" options: (NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial) context:nil];
     }];
     
     // add audio image and background color
