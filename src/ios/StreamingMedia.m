@@ -27,6 +27,7 @@
     NSString *videoType;
     AVPlayer *movie;
     BOOL controls;
+    NSNumber *startPosition;
 }
 
 NSString * const TYPE_VIDEO = @"VIDEO";
@@ -58,6 +59,12 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
         controls = [[options objectForKey:@"controls"] boolValue];
     } else {
         controls = YES;
+    }
+    
+    if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"startPosition"]) {
+        startPosition = [options objectForKey:@"startPosition"];
+    } else {
+        startPosition = 0;
     }
     
     if ([type isEqualToString:TYPE_AUDIO]) {
@@ -219,6 +226,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     // handle gestures
     [self handleGestures];
     
+    [movie.currentItem seekToTime:CMTimeMakeWithSeconds(10.8, startPosition.intValue) completionHandler:nil];
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:controls];
     [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
