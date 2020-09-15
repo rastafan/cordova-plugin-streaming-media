@@ -75,6 +75,9 @@ public class StreamingMedia extends CordovaPlugin {
 							} else if (options.get(optKey).getClass().equals(Boolean.class)) {
 								extras.putBoolean(optKey, (Boolean)options.get(optKey));
 								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
+							} else if (options.get(optKey).getClass().equals(Integer.class)) {
+								extras.putInt(optKey, (Integer)options.get(optKey));
+								Log.v(TAG, "Added option: " + optKey + " -> " + String.valueOf(options.get(optKey)));
 							}
 
 						} catch (JSONException e) {
@@ -95,7 +98,17 @@ public class StreamingMedia extends CordovaPlugin {
 		super.onActivityResult(requestCode, resultCode, intent);
 		if (ACTIVITY_CODE_PLAY_MEDIA == requestCode) {
 			if (Activity.RESULT_OK == resultCode) {
-				this.callbackContext.success();
+				int position = 0;
+				if (intent != null && intent.hasExtra("position")) {
+					position = intent.getIntExtra("position", 0);
+				}
+				JSONObject result = new JSONObject();
+				try {
+					result.put("position", position);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				this.callbackContext.success(result);
 			} else if (Activity.RESULT_CANCELED == resultCode) {
 				String errMsg = "Error";
 				if (intent != null && intent.hasExtra("message")) {

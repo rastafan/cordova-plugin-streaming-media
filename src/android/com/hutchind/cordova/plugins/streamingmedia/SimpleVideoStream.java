@@ -32,6 +32,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 	private String mVideoUrl;
 	private Boolean mShouldAutoClose = true;
 	private boolean mControls;
+	private int mStartPosition = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		mVideoUrl = b.getString("mediaUrl");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
 		mControls = b.getBoolean("controls", true);
+		mStartPosition = b.getInt("startPosition", 0);
 
 		RelativeLayout relLayout = new RelativeLayout(this);
 		relLayout.setBackgroundColor(Color.BLACK);
@@ -104,6 +106,12 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 			if (mVideoView.getCurrentPosition() > 0) {
 				// Video is not at the very beginning anymore.
 				// Hide the progress bar.
+				
+				//Since video has started, we can seek to the desired position
+				if(mStartPosition > 0) {
+					mVideoView.seekTo(mStartPosition);
+				}
+				
 				mProgressBar.setVisibility(View.GONE);
 			} else {
 				// Video is still at the very beginning.
@@ -142,8 +150,10 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 
 	private void wrapItUp(int resultCode, String message) {
 		Log.d(TAG, "wrapItUp was triggered.");
+		Log.d(TAG, "Last position : " + mVideoView.getCurrentPosition());
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
+		intent.putExtra("position", mVideoView.getCurrentPosition());
 		setResult(resultCode, intent);
 		finish();
 	}

@@ -29,6 +29,7 @@ MediaController.MediaPlayerControl {
 	private View mMediaControllerView;
 	private String mAudioUrl;
 	private Boolean mShouldAutoClose = true;
+	private int mStartPosition = 0;
 
 	@Override
 	public void onCreate(Bundle icicle) {
@@ -40,6 +41,7 @@ MediaController.MediaPlayerControl {
 		String backgroundImagePath = b.getString("bgImage");
 		String backgroundImageScale = b.getString("bgImageScale");
 		mShouldAutoClose = b.getBoolean("shouldAutoClose", true);
+		mStartPosition = b.getInt("startPosition", 0);
 		backgroundImageScale = backgroundImageScale == null ? "center" : backgroundImageScale.toLowerCase();
 		ImageView.ScaleType bgImageScaleType;
 		// Default background to black
@@ -123,6 +125,9 @@ MediaController.MediaPlayerControl {
 		mMediaPlayer.start();
 		mMediaController.setEnabled(true);
 		mMediaController.show();
+		if(mStartPosition > 0) {
+			seekTo(mStartPosition);
+		}
 	}
 
 	@Override
@@ -214,8 +219,11 @@ MediaController.MediaPlayerControl {
 	}
 
 	private void wrapItUp(int resultCode, String message) {
+		Log.d(TAG, "wrapItUp was triggered.");
+		Log.d(TAG, "Last position : " + getCurrentPosition());
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
+		intent.putExtra("position", getCurrentPosition());
 		setResult(resultCode, intent);
 		finish();
 	}
