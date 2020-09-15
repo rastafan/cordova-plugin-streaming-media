@@ -64,7 +64,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     if (![options isKindOfClass:[NSNull class]] && [options objectForKey:@"startPosition"]) {
         startPosition = [options objectForKey:@"startPosition"];
     } else {
-        startPosition = 0;
+        startPosition = [NSNumber numberWithInt:0];
     }
     
     if ([type isEqualToString:TYPE_AUDIO]) {
@@ -226,7 +226,8 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     // handle gestures
     [self handleGestures];
     
-    [movie.currentItem seekToTime:CMTimeMakeWithSeconds(10.8, startPosition.intValue) completionHandler:nil];
+    
+    [movie.currentItem seekToTime:CMTimeMakeWithSeconds([startPosition intValue], 1000) completionHandler:nil];
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:controls];
     [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
@@ -305,9 +306,10 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
             
             [ self cleanup];
             CDVPluginResult* pluginResult;
-
-            pluginResult = [ CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsBool: true];
-
+            
+            NSDictionary * result = @{@"lastPosition":@(CMTimeGetSeconds([self->movie currentTime])*1000)};
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+            
             [ self. commandDelegate sendPluginResult:pluginResult callbackId: callbackId];
         }
     }
