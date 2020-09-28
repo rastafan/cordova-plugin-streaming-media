@@ -223,7 +223,7 @@ MediaController.MediaPlayerControl {
 		Log.d(TAG, "Last position : " + getCurrentPosition());
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
-		intent.putExtra("position", getCurrentPosition());
+		intent.putExtra("lastPosition", getCurrentPosition());
 		setResult(resultCode, intent);
 		finish();
 	}

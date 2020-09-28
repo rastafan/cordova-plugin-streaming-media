@@ -99,12 +99,12 @@ public class StreamingMedia extends CordovaPlugin {
 		if (ACTIVITY_CODE_PLAY_MEDIA == requestCode) {
 			if (Activity.RESULT_OK == resultCode) {
 				int position = 0;
-				if (intent != null && intent.hasExtra("position")) {
-					position = intent.getIntExtra("position", 0);
+				if (intent != null && intent.hasExtra("lastPosition")) {
+					position = intent.getIntExtra("lastPosition", 0);
 				}
 				JSONObject result = new JSONObject();
 				try {
-					result.put("position", position);
+					result.put("lastPosition", lastPosition);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
