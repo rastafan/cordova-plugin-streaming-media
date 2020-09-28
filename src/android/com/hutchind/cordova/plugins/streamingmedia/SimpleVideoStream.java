@@ -153,7 +153,7 @@ MediaPlayer.OnErrorListener, MediaPlayer.OnBufferingUpdateListener {
 		Log.d(TAG, "Last position : " + mVideoView.getCurrentPosition());
 		Intent intent = new Intent();
 		intent.putExtra("message", message);
-		intent.putExtra("position", mVideoView.getCurrentPosition());
+		intent.putExtra("lastPosition", mVideoView.getCurrentPosition());
 		setResult(resultCode, intent);
 		finish();
 	}
