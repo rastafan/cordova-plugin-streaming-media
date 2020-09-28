@@ -104,7 +104,7 @@ public class StreamingMedia extends CordovaPlugin {
 				}
 				JSONObject result = new JSONObject();
 				try {
-					result.put("lastPosition", lastPosition);
+					result.put("lastPosition", position);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
