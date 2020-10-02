@@ -227,7 +227,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     [self handleGestures];
     
     
-    [movie.currentItem seekToTime:CMTimeMakeWithSeconds([startPosition intValue], 1000) completionHandler:nil];
+    
     [moviePlayer setPlayer:movie];
     [moviePlayer setShowsPlaybackControls:controls];
     [moviePlayer setUpdatesNowPlayingInfoCenter:YES];
@@ -237,6 +237,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
     // present modally so we get a close button
     [self.viewController presentViewController:moviePlayer animated:YES completion:^(void){
         [self->moviePlayer.player play];
+        [self->movie.currentItem seekToTime:CMTimeMakeWithSeconds([self->startPosition floatValue]/1000, 1) completionHandler:nil];
         [self->moviePlayer addObserver:self forKeyPath:@"view.frame" options: (NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial) context:nil];
     }];
     
@@ -306,7 +307,7 @@ NSString * const DEFAULT_IMAGE_SCALE = @"center";
             
             [ self cleanup];
             CDVPluginResult* pluginResult;
-            
+            NSLog(@"secondi : %f",CMTimeGetSeconds([self->movie currentTime]));
             NSDictionary * result = @{@"lastPosition":@(CMTimeGetSeconds([self->movie currentTime])*1000)};
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
             
